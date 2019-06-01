@@ -1,4 +1,4 @@
-package com.prerna.gamefinder.player.model;
+package com.prerna.gamefinder.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;

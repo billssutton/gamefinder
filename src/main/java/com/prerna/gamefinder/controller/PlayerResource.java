@@ -1,7 +1,7 @@
 package com.prerna.gamefinder.player.web;
 
-import com.prerna.gamefinder.player.controller.PlayerController;
-import com.prerna.gamefinder.player.model.PlayerModel;
+import com.prerna.gamefinder.service.PlayerSevice;
+import com.prerna.gamefinder.entity.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PlayerResource {
     @Autowired
-    PlayerController playerController;
+    PlayerSevice playerSevice;
 
     @RequestMapping("/saveTest")
     public String process() {
-        playerController.saveTest();
+        playerSevice.saveTest();
         return "Done";
     }
 
@@ -22,7 +22,7 @@ public class PlayerResource {
     public String findAll() {
         String result = "";
 
-        for(PlayerModel play : playerController.findAll()){
+        for(Player play : playerSevice.findAll()){
             result += play.toString() + "</br>";
         }
 
@@ -31,7 +31,7 @@ public class PlayerResource {
 
     @RequestMapping("/findbyid")
     public String findById(@RequestParam("id") long id){
-        String result = playerController.findById(id).toString();
+        String result = playerSevice.findById(id).toString();
         return result;
     }
 
@@ -39,7 +39,7 @@ public class PlayerResource {
     public String fetchDataByLastName(@RequestParam("lastname") String lastName){
         String result = "";
 
-        for(PlayerModel play: playerController.findByLastName(lastName)){
+        for(Player play: playerSevice.findByLastName(lastName)){
             result += play.toString() + "</br>";
         }
 
