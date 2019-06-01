@@ -1,16 +1,25 @@
 package com.prerna.gamefinder.entity;
 
 import javax.persistence.*;
-import java.io.Serializable;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
+@Data
 @Table(name = "player")
-public class PlayerModel implements Serializable {
+public class Player {
 
-    private static final long serialVersionUID = -3009157732242241606L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @EqualsAndHashCode.Exclude
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
+    private Set<Skill> skills;
 
     @Column(name = "firstname")
     private String firstName;
@@ -18,16 +27,15 @@ public class PlayerModel implements Serializable {
     @Column(name = "lastname")
     private String lastName;
 
-    protected PlayerModel() {
+    @Column(name = "email")
+    private String email;
+
+    public Player(){
     }
 
-    public PlayerModel(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Customer[id=%d, firstName='%s', lastName='%s']", id, firstName, lastName);
+    public Player(String email, Skill... skills){
+        setEmail(email);
+        this.skills = Stream.of(skills).collect(Collectors.toSet());
+        this.skills.forEach(x -> x.setPlayer(this));
     }
 }

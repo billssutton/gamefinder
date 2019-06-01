@@ -10,12 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 @Component
-public class PlayerSevice implements IPlayerService{
+public class PlayerService implements IPlayerService{
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -32,7 +30,7 @@ public class PlayerSevice implements IPlayerService{
     }
 
     @Override
-    public Player getPlayerById(long id){
+    public Player getPlayerById(int id){
         logger.debug("Getting player with id: "+id);
         return playerRepository.findById(id).get();
     }
@@ -75,25 +73,18 @@ public class PlayerSevice implements IPlayerService{
     }
 
     @Override
-    public boolean addSkillToPlayer(Skill skill, Player player) {
-        logger.debug("Adding skill " + skill + "to league " + player);
-
-        List<Skill> skills = player.getSkillList();
-
-        if(skills == null) {
-            skills = new Vector<Skill>();
-        }
-
-        for (Skill s : skills) {
-            logger.debug("player already has skill : " + s);
-        }
-
-        skills.add(skill);
-        player.setSkillList(skills);
+    public boolean addSkill(Skill skill) {
         skillRepository.save(skill);
+        Player player = skill.getPlayer();
+        Set<Skill> skillList = player.getSkills();
+        if(skillList == null){
+            skillList = new HashSet<>();
+        }
+        skillList.add(skill);
+        player.setSkills(skillList);
         playerRepository.save(player);
 
-        return false;
+        return true;
     }
 
     @Override
